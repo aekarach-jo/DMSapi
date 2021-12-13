@@ -27,7 +27,7 @@ namespace DMSapi
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices( IServiceCollection services)
         {
             // requires using Microsoft.Extensions.Options
             services.Configure<DatabaseSetting>(
@@ -39,21 +39,26 @@ namespace DMSapi
             services.AddSingleton<RoomService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<MeterService>();
-            
+
+
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddCors();
-
+            // services.AddMvc();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
-            app.UseCors(options => options.WithOrigins("http://localhost:4200")
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+            // app.UseMvc();
+            app.UseCors(options => options.AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowAnyOrigin()
+            .SetIsOriginAllowed(origin => true)
+            // .AllowCredentials()
+            );
+            app.UseSwagger();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
